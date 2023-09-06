@@ -4,6 +4,8 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - "apps/frontend"
   pull_request:
 
 jobs:
@@ -11,7 +13,13 @@ jobs:
     name: Nx Release - Main Job
     runs-on: ubuntu-latest
     steps:
+
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+    
       - name: Run Unit Tests (Affected)
-        run: npx nx affected --target=test 
+        run: npx nx affected --base=main --target=test 
+    
       - name: Run Project Release (Affected)
-        run: npx nx affected --target=release
+        run: npx nx affected --base=main --target=release
