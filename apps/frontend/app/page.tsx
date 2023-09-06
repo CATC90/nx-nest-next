@@ -8,7 +8,7 @@ export default async function Index() {
    * Note: The corresponding styles are in the ./index.scss file.
    */
   const data = libInterfaces();
-  console.log(data);
+  console.log(`${data}`);
 
   return (
     <div className={styles.page}>
