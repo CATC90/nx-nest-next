@@ -9,6 +9,7 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
+        "root": "apps/frontend",
         "outputPath": "dist/apps/frontend"
       },
       "configurations": {
