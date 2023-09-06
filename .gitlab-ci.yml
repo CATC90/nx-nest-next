@@ -1,0 +1,74 @@
+image: node:16
+
+variables:
+  GIT_DEPTH: 100
+stages:
+  - build
+  - test
+  - deploy_setup
+  - deploy
+ 
+
+.distributed:
+  tags:
+    - docker-main
+  interruptible: true
+  only:
+    - main
+    - merge_requests
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+    - NX_HEAD=$CI_COMMIT_SHA
+    - NX_BASE=${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}
+  artifacts:
+    paths:
+      - node_modules/.cache/nx
+
+lint:
+  stage: build
+  extends: .distributed
+  script:
+    - npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=lint --parallel=3
+
+build:
+  stage: build
+  extends: .distributed
+  script:
+    - npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=build
+
+test:
+  stage: test
+  extends: .distributed
+  script:
+    - npx nx affected  --base=$NX_BASE --head=$NX_HEAD --target=test
+
+generate-deploy-child-process:
+    stage: deploy_setup
+    extends: .distributed
+    tags:
+      - docker-main
+    script: 
+    -  npm --prefix ./tools/deploy-tool install 
+    -  npm --prefix ./tools/deploy-tool run build
+    -  node ./tools/deploy-tool/build/deploy.js --base ${NX_BASE} --head ${NX_HEAD} --branch ${CI_COMMIT_BRANCH}
+    artifacts:
+      paths:
+        - affected-deploy-ci.yaml
+
+deploy:
+  stage: deploy
+  only:
+    - merge_requests
+    - main
+  trigger:
+    include: 
+      - artifact: affected-deploy-ci.yaml
+        job: generate-deploy-child-process
+    strategy: depend
+    

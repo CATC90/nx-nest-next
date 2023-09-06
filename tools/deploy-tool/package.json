@@ -1,0 +1,22 @@
+{
+  "type": "module",
+  "name": "deploy-tool",
+  "bin": {
+    "generate-deploy-yaml": "./build/deploy.js'"
+  },
+  "scripts": {
+    "build": "rimraf ./build && tsc && chmod +x build/*"
+  },
+  "dependencies": {
+    "@nrwl/devkit": "14.6.4",
+    "@nrwl/tao": "14.6.4",
+    "js-yaml": "4.1.0",
+    "yargs": "^17.5.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "4.0.5",
+    "@types/node": "18.7.18",
+    "rimraf": "^3.0.2",
+    "@types/yargs": "^17.0.13"
+  }
+}
