@@ -1,3 +1,4 @@
+import { libInterfaces } from '@regalamelo/lib-interfaces';
 import styles from './page.module.scss';
 
 export default async function Index() {
@@ -6,6 +7,8 @@ export default async function Index() {
    *
    * Note: The corresponding styles are in the ./index.scss file.
    */
+  const data = libInterfaces();
+
   return (
     <div className={styles.page}>
       <div className="wrapper">
@@ -13,7 +16,7 @@ export default async function Index() {
           <div id="welcome">
             <h1>
               <span> Hello there, </span>
-              Welcome frontend 👋
+              Welcome frontend {data}👋
             </h1>
           </div>
 
