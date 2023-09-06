@@ -5,7 +5,7 @@ on:
       - main
       - develop
     paths:
-      - "apps/frontend"
+      - "./apps/frontend"
   pull_request:
 
 jobs:
