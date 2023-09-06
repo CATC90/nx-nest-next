@@ -4,6 +4,8 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - 'apps/**'
   pull_request:
 
 jobs:
@@ -14,9 +16,6 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
     
       - name: Evaluate affected
         uses: leanix/nx-affected-dependencies-action@v0.2.1
